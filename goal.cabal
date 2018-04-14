@@ -2,15 +2,17 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ea127e7891f4ecd9c044c02a7af834647ee63f61284a90fa965dc46cf3088f3b
+-- hash: 3ec4328e180f58a1b034e2cfedea6eff13eea2d9a39b622d56b86e85e16bfd60
 
 name:           goal
 version:        0.1.0.0
+synopsis:       Manage projects one goal at a time
+description:    Manage projects one goal at a time
 category:       Web
-homepage:       https://github.com/githubuser/goal#readme
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2018 Author name here
+homepage:       https://github.com/cloud8421/goal#readme
+author:         Claudio Ortolina
+maintainer:     cloud8421@gmail.com
+copyright:      2018 Claudio Ortolina
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -24,7 +26,22 @@ executable goal
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , aeson-casing
+    , base >=4.7 && <5
+    , file-embed
+    , monad-logger
+    , optparse-applicative
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , servant-server
+    , text
+    , wai
+    , wai-extra
+    , wai-logger
+    , wai-middleware-static-embedded
+    , warp
   other-modules:
       Paths_goal
   default-language: Haskell2010

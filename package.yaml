@@ -1,18 +1,33 @@
 name:                goal
 version:             0.1.0.0
-#synopsis:
-#description:
-homepage:            https://github.com/githubuser/goal#readme
+synopsis:            Manage projects one goal at a time
+description:         Manage projects one goal at a time
+homepage:            https://github.com/cloud8421/goal#readme
 license:             BSD3
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2018 Author name here
+author:              Claudio Ortolina
+maintainer:          cloud8421@gmail.com
+copyright:           2018 Claudio Ortolina
 category:            Web
 extra-source-files:
-- README.md
+  - README.md
 
 dependencies:
   - base >= 4.7 && < 5
+  - aeson
+  - aeson-casing
+  - file-embed
+  - monad-logger
+  - optparse-applicative
+  - persistent
+  - persistent-sqlite
+  - persistent-template
+  - servant-server
+  - text
+  - wai
+  - wai-extra
+  - wai-logger
+  - wai-middleware-static-embedded
+  - warp
 
 executables:
   goal:
