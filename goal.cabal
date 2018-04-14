@@ -1,0 +1,30 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: ea127e7891f4ecd9c044c02a7af834647ee63f61284a90fa965dc46cf3088f3b
+
+name:           goal
+version:        0.1.0.0
+category:       Web
+homepage:       https://github.com/githubuser/goal#readme
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    README.md
+
+executable goal
+  main-is: Main.hs
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  other-modules:
+      Paths_goal
+  default-language: Haskell2010
