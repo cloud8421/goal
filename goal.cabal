@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9b1af3ab06a8e3e4f4474ef38967fd21436df629d2429ccaf43c528a2f91060d
+-- hash: bb187b0d06f8192ba5706616dd41b066755fbcf8f230f5d7a85dff7ec3ad0695
 
 name:           goal
 version:        0.1.0.0
@@ -42,6 +42,7 @@ library
     , wai-middleware-static-embedded
     , warp
   exposed-modules:
+      Lib
       Main
   other-modules:
       Paths_goal
@@ -71,6 +72,7 @@ executable goal
     , wai-middleware-static-embedded
     , warp
   other-modules:
+      Lib
       Paths_goal
   default-language: Haskell2010
 
