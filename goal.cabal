@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bb187b0d06f8192ba5706616dd41b066755fbcf8f230f5d7a85dff7ec3ad0695
+-- hash: f9931160772ae6bfbbe521fac7e8d39c47356ad409c26af87e1de2bee184a365
 
 name:           goal
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
     , aeson-casing
     , base >=4.7 && <5
     , file-embed
+    , http-types
     , monad-logger
     , optparse-applicative
     , persistent
@@ -59,6 +60,7 @@ executable goal
     , base >=4.7 && <5
     , file-embed
     , goal
+    , http-types
     , monad-logger
     , optparse-applicative
     , persistent
@@ -91,6 +93,7 @@ test-suite goal-test
     , hspec >=2.0.0
     , hspec-wai
     , hspec-wai-json
+    , http-types
     , monad-logger
     , optparse-applicative
     , persistent
@@ -104,6 +107,6 @@ test-suite goal-test
     , wai-middleware-static-embedded
     , warp
   other-modules:
-      ExampleSpec
+      LibSpec
       Paths_goal
   default-language: Haskell2010

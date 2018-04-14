@@ -16,6 +16,7 @@ dependencies:
 - aeson
 - aeson-casing
 - file-embed
+- http-types
 - monad-logger
 - optparse-applicative
 - persistent
