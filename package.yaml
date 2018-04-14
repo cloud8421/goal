@@ -9,27 +9,47 @@ maintainer:          cloud8421@gmail.com
 copyright:           2018 Claudio Ortolina
 category:            Web
 extra-source-files:
-  - README.md
+- README.md
 
 dependencies:
-  - base >= 4.7 && < 5
-  - aeson
-  - aeson-casing
-  - file-embed
-  - monad-logger
-  - optparse-applicative
-  - persistent
-  - persistent-sqlite
-  - persistent-template
-  - servant-server
-  - text
-  - wai
-  - wai-extra
-  - wai-logger
-  - wai-middleware-static-embedded
-  - warp
+- base >= 4.7 && < 5
+- aeson
+- aeson-casing
+- file-embed
+- monad-logger
+- optparse-applicative
+- persistent
+- persistent-sqlite
+- persistent-template
+- servant-server
+- text
+- wai
+- wai-extra
+- wai-logger
+- wai-middleware-static-embedded
+- warp
+
+library:
+  source-dirs: src
 
 executables:
   goal:
-    source-dirs:      src
-    main:             Main.hs
+    source-dirs: src
+    main: Main.hs
+    dependencies:
+    - goal
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+
+tests:
+  goal-test:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options: -Wall
+    dependencies:
+    - goal
+    - hspec >=2.0.0
+    - hspec-wai
+    - hspec-wai-json
