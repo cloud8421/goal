@@ -56,3 +56,4 @@ tests:
     - hspec-wai
     - hspec-wai-json
     - microlens
+    - bytestring

@@ -6,6 +6,8 @@ module LibSpec
   ) where
 
 import Control.Monad.Logger (runNoLoggingT)
+import Data.ByteString (ByteString)
+import qualified Data.ByteString.Lazy as LB
 import Data.Text (Text, unpack)
 import Database.Persist.Sqlite
   ( SqliteConnectionInfo
@@ -15,7 +17,9 @@ import Database.Persist.Sqlite
   )
 import Lens.Micro (set)
 import Lib (app)
+import Network.HTTP.Types
 import Network.Wai (Application)
+import Network.Wai.Test (SResponse)
 import Schema (Project(..))
 import Store (createProject, runMigrations)
 import System.Directory (removeFile)
@@ -49,8 +53,19 @@ spec =
   beforeAll_ seedDb $
   afterAll_ removeDbFile $
   with application $
-  describe "GET /api/projects" $ do
-    let req = get "/api/projects"
-    let respBody = [json|[{"id":1,"name":"example"}]|]
-    it "it responds successfully" $ req `shouldRespondWith` 200
-    it "it responds with []" $ req `shouldRespondWith` respBody
+  describe "API endpoints" $ do
+    context "GET /projects" $ do
+      let req = jsonGet "/api/projects"
+      let respBody = [json|[{"id":1,"name":"example"}]|]
+      it "it responds successfully" $ req `shouldRespondWith` 200
+      it "it responds with []" $ req `shouldRespondWith` respBody
+    context "POST /projects" $ do
+      let reqBody = [json|{"name":"New Project"}|]
+      let req = jsonPost "/api/projects" reqBody
+      it "it responds successfully" $ req `shouldRespondWith` 201
+
+jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
+jsonPost path = request methodPost path [(hContentType, "application/json")]
+
+jsonGet :: ByteString -> WaiSession SResponse
+jsonGet path = request methodGet path [(hContentType, "application/json")] ""

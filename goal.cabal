@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3008fb13c0a530cfd95eaf94471edd147274d00ea758449728c0cf760440729e
+-- hash: 6f0180e2ec2eb0ed78d5ffff210a0fb1b80d03aa3abe262b21263c585c960ab0
 
 name:           goal
 version:        0.1.0.0
@@ -96,6 +96,7 @@ test-suite goal-test
       aeson
     , aeson-casing
     , base >=4.7 && <5
+    , bytestring
     , directory
     , file-embed
     , goal

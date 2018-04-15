@@ -29,9 +29,10 @@ app :: ConnectionPool -> Application
 app pool = serve api (server pool)
 
 server :: ConnectionPool -> Server API
-server pool = getAllProjects
+server pool = getAllProjects :<|> createProject
   where
     getAllProjects = liftIO $ S.getAllProjects pool
+    createProject project = liftIO $ S.createProject pool project
 
 migrate :: Config -> IO ()
 migrate config =
