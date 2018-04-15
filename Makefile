@@ -11,3 +11,7 @@ migrate:
 db-console:
 	sqlite3 $(DB_FILE)
 .PHONY: db-console
+
+install:
+	stack install
+.PHONY: install
