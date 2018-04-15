@@ -11,9 +11,7 @@ import Api.Project
 import Config
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Logger (runStderrLoggingT)
-import Data.Text (Text)
 import Database.Persist.Sqlite (ConnectionPool, withSqlitePool)
-import Network.HTTP.Types
 import Network.Wai
 import Network.Wai.Handler.Warp (run)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
