@@ -51,6 +51,8 @@ tests:
     ghc-options: -Wall
     dependencies:
     - goal
+    - directory
     - hspec >=2.0.0
     - hspec-wai
     - hspec-wai-json
+    - microlens

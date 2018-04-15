@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d5cd40797539389421708253f4e41e4904ed5050199d7cc9684e541a097ccbcc
+-- hash: 3008fb13c0a530cfd95eaf94471edd147274d00ea758449728c0cf760440729e
 
 name:           goal
 version:        0.1.0.0
@@ -96,12 +96,14 @@ test-suite goal-test
       aeson
     , aeson-casing
     , base >=4.7 && <5
+    , directory
     , file-embed
     , goal
     , hspec >=2.0.0
     , hspec-wai
     , hspec-wai-json
     , http-types
+    , microlens
     , monad-logger
     , optparse-applicative
     , persistent
