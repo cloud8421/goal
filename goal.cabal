@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9d733bcc8f06a18b8a9688d1de77165a32dcbd380137dc3974a12a3e902ed351
+-- hash: d5cd40797539389421708253f4e41e4904ed5050199d7cc9684e541a097ccbcc
 
 name:           goal
 version:        0.1.0.0
@@ -44,6 +44,7 @@ library
     , warp
   exposed-modules:
       Api.Project
+      Config
       Lib
       Main
       Schema
@@ -78,6 +79,7 @@ executable goal
     , warp
   other-modules:
       Api.Project
+      Config
       Lib
       Schema
       Store

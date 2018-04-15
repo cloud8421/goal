@@ -10,7 +10,7 @@ import Test.Hspec
 import Test.Hspec.Wai
 
 application :: IO Application
-application = return app
+application = return $ app ":memory:"
 
 spec :: Spec
 spec =
