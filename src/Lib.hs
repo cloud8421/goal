@@ -19,8 +19,9 @@ import Network.Wai.Handler.Warp (run)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Servant
 import qualified Store as S
+import qualified Template as T
 
-type API = "api" :> ProjectApi
+type API = T.Root :<|> "api" :> ProjectApi
 
 api :: Proxy API
 api = Proxy
@@ -29,8 +30,9 @@ app :: ConnectionPool -> Application
 app pool = serve api (server pool)
 
 server :: ConnectionPool -> Server API
-server pool = getAllProjects :<|> createProject
+server pool = homePage :<|> getAllProjects :<|> createProject
   where
+    homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
     createProject project = liftIO $ S.createProject pool project
 

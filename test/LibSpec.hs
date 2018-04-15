@@ -53,16 +53,19 @@ spec =
   beforeAll_ seedDb $
   afterAll_ removeDbFile $
   with application $
-  describe "API endpoints" $ do
-    context "GET /projects" $ do
+  describe "endpoints" $ do
+    context "GET /" $ do
+      let req = get "/"
+      it "responds successfully" $ req `shouldRespondWith` 200
+    context "GET /api/projects" $ do
       let req = jsonGet "/api/projects"
       let respBody = [json|[{"id":1,"name":"example"}]|]
-      it "it responds successfully" $ req `shouldRespondWith` 200
-      it "it responds with []" $ req `shouldRespondWith` respBody
-    context "POST /projects" $ do
+      it "responds successfully" $ req `shouldRespondWith` 200
+      it "responds with []" $ req `shouldRespondWith` respBody
+    context "POST /api/projects" $ do
       let reqBody = [json|{"name":"New Project"}|]
       let req = jsonPost "/api/projects" reqBody
-      it "it responds successfully" $ req `shouldRespondWith` 201
+      it "responds successfully" $ req `shouldRespondWith` 201
 
 jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
 jsonPost path = request methodPost path [(hContentType, "application/json")]

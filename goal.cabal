@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6f0180e2ec2eb0ed78d5ffff210a0fb1b80d03aa3abe262b21263c585c960ab0
+-- hash: 3fb202b6bccf6dbbfbae58f229480bfc1519d10513d6b9c4a7af1f2e85e9d894
 
 name:           goal
 version:        0.1.0.0
@@ -28,6 +28,7 @@ library
       aeson
     , aeson-casing
     , base >=4.7 && <5
+    , blaze-html
     , file-embed
     , http-types
     , monad-logger
@@ -35,6 +36,7 @@ library
     , persistent
     , persistent-sqlite
     , persistent-template
+    , servant-blaze
     , servant-server
     , text
     , wai
@@ -49,6 +51,7 @@ library
       Main
       Schema
       Store
+      Template
   other-modules:
       Paths_goal
   default-language: Haskell2010
@@ -62,6 +65,7 @@ executable goal
       aeson
     , aeson-casing
     , base >=4.7 && <5
+    , blaze-html
     , file-embed
     , goal
     , http-types
@@ -70,6 +74,7 @@ executable goal
     , persistent
     , persistent-sqlite
     , persistent-template
+    , servant-blaze
     , servant-server
     , text
     , wai
@@ -83,6 +88,7 @@ executable goal
       Lib
       Schema
       Store
+      Template
       Paths_goal
   default-language: Haskell2010
 
@@ -96,6 +102,7 @@ test-suite goal-test
       aeson
     , aeson-casing
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , directory
     , file-embed
@@ -110,6 +117,7 @@ test-suite goal-test
     , persistent
     , persistent-sqlite
     , persistent-template
+    , servant-blaze
     , servant-server
     , text
     , wai

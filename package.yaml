@@ -15,6 +15,7 @@ dependencies:
 - base >= 4.7 && < 5
 - aeson
 - aeson-casing
+- blaze-html
 - file-embed
 - http-types
 - monad-logger
@@ -23,6 +24,7 @@ dependencies:
 - persistent-sqlite
 - persistent-template
 - servant-server
+- servant-blaze
 - text
 - wai
 - wai-extra
