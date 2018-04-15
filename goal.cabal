@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 14f503639a8a94ac83bc8f145734e66d86a0f95c906258600a2bad2096936e7d
+-- hash: 9d733bcc8f06a18b8a9688d1de77165a32dcbd380137dc3974a12a3e902ed351
 
 name:           goal
 version:        0.1.0.0
@@ -46,6 +46,8 @@ library
       Api.Project
       Lib
       Main
+      Schema
+      Store
   other-modules:
       Paths_goal
   default-language: Haskell2010
@@ -77,6 +79,8 @@ executable goal
   other-modules:
       Api.Project
       Lib
+      Schema
+      Store
       Paths_goal
   default-language: Haskell2010
 
