@@ -16,8 +16,9 @@ home :: Home
 home =
   docTypeHtml $ do
     H.head $ do
+      meta ! charset "UTF-8"
       H.title "Goals"
       link ! rel "stylesheet" ! href "/bulma.css"
-    body $ do
-      h1 "Goals"
-      p "Manage projects one goal at a time"
+    body $ main ! A.id "app" $ h1 "Loading..."
+    script ! type_ "text/javascript" ! src "/main.js" $ mempty
+    script ! type_ "text/javascript" ! src "/boot.js" $ mempty
