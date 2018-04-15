@@ -9,3 +9,6 @@ runMigrations = runSqlPool (runMigration migrateAll)
 
 getAllProjects :: ConnectionPool -> IO [Entity Project]
 getAllProjects = runSqlPool (selectList [] [])
+
+createProject :: ConnectionPool -> Project -> IO (Key Project)
+createProject pool project = runSqlPool (insert project) pool
