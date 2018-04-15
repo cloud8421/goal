@@ -17,6 +17,7 @@ import Network.HTTP.Types
 import Network.Wai
 import Network.Wai.Handler.Warp (run)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
+import Network.Wai.Middleware.Static ((>->), addBase, noDots, staticPolicy)
 import Servant
 import qualified Store as S
 import qualified Template as T
@@ -42,8 +43,12 @@ migrate config =
   withSqlitePool (configDbPath config) 1 $ \pool ->
     liftIO $ S.runMigrations pool
 
+staticMiddleware :: Middleware
+staticMiddleware = staticPolicy (noDots >-> addBase "static")
+
 startServer :: Config -> IO ()
 startServer config =
   runStderrLoggingT $
   withSqlitePool (configDbPath config) 5 $ \pool ->
-    liftIO $ run (configPort config) $ logStdoutDev $ app pool
+    liftIO $
+    run (configPort config) $ logStdoutDev $ staticMiddleware $ app pool

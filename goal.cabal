@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3fb202b6bccf6dbbfbae58f229480bfc1519d10513d6b9c4a7af1f2e85e9d894
+-- hash: 6958d8c06bfe15aa39fa2f3169ae956d3bd811a2535bf09b7312611bb5326f3a
 
 name:           goal
 version:        0.1.0.0
@@ -42,6 +42,7 @@ library
     , wai
     , wai-extra
     , wai-logger
+    , wai-middleware-static
     , wai-middleware-static-embedded
     , warp
   exposed-modules:
@@ -80,6 +81,7 @@ executable goal
     , wai
     , wai-extra
     , wai-logger
+    , wai-middleware-static
     , wai-middleware-static-embedded
     , warp
   other-modules:
@@ -123,6 +125,7 @@ test-suite goal-test
     , wai
     , wai-extra
     , wai-logger
+    , wai-middleware-static
     , wai-middleware-static-embedded
     , warp
   other-modules:

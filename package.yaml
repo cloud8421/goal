@@ -30,6 +30,7 @@ dependencies:
 - wai-extra
 - wai-logger
 - wai-middleware-static-embedded
+- wai-middleware-static
 - warp
 
 library:
