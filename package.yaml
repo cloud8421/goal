@@ -35,6 +35,19 @@ dependencies:
 
 library:
   source-dirs: src
+  when:
+  - condition: flag(dev)
+    then:
+      ghc-options:
+      - -Wall
+      - -fwarn-tabs
+      - -O0
+      cpp-options: -DDEVELOPMENT
+    else:
+      ghc-options:
+      - -Wall
+      - -fwarn-tabs
+      - -O2
 
 executables:
   goal:
@@ -60,3 +73,9 @@ tests:
     - hspec-wai-json
     - microlens
     - bytestring
+
+flags:
+  dev:
+    description: Turn on development settings, like auto-reload templates.
+    manual: false
+    default: false

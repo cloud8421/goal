@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6958d8c06bfe15aa39fa2f3169ae956d3bd811a2535bf09b7312611bb5326f3a
+-- hash: 373cbed2b3dec74155dab64d3cbcbf45c318b1277203181f3d6d66103ba993bb
 
 name:           goal
 version:        0.1.0.0
@@ -20,6 +20,11 @@ cabal-version:  >= 1.10
 
 extra-source-files:
     README.md
+
+flag dev
+  description: Turn on development settings, like auto-reload templates.
+  manual: False
+  default: False
 
 library
   hs-source-dirs:
@@ -45,6 +50,11 @@ library
     , wai-middleware-static
     , wai-middleware-static-embedded
     , warp
+  if flag(dev)
+    ghc-options: -Wall -fwarn-tabs -O0
+    cpp-options: -DDEVELOPMENT
+  else
+    ghc-options: -Wall -fwarn-tabs -O2
   exposed-modules:
       Api.Project
       Config
