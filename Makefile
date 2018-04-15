@@ -1,5 +1,13 @@
 DB_FILE := ~/Dropbox/Goals/goals.db
 
+build-dev:
+	stack build --flag *:dev
+.PHONY: build-dev
+
+build-prod:
+	stack build
+.PHONY: build-prod
+
 start:
 	stack exec goal start -- --database-file $(DB_FILE)
 .PHONY: start
