@@ -6,3 +6,6 @@ import Schema
 
 runMigrations :: ConnectionPool -> IO ()
 runMigrations = runSqlPool (runMigration migrateAll)
+
+getAllProjects :: ConnectionPool -> IO [Entity Project]
+getAllProjects = runSqlPool (selectList [] [])

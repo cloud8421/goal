@@ -12,28 +12,35 @@ import Config
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Logger (runStderrLoggingT)
 import Data.Text (Text)
-import Database.Persist.Sqlite (withSqlitePool)
+import Database.Persist.Sqlite (ConnectionPool, withSqlitePool)
 import Network.HTTP.Types
 import Network.Wai
 import Network.Wai.Handler.Warp (run)
+import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Servant
-import Store
+import qualified Store as S
 
 type API = "api" :> ProjectApi
 
 api :: Proxy API
 api = Proxy
 
-app :: Text -> Application
-app dbPath = serve api server
+app :: ConnectionPool -> Application
+app pool = serve api (server pool)
 
-server :: Server API
-server = return []
+server :: ConnectionPool -> Server API
+server pool = getAllProjects
+  where
+    getAllProjects = liftIO $ S.getAllProjects pool
 
 migrate :: Config -> IO ()
 migrate config =
   runStderrLoggingT $
-  withSqlitePool (configDbPath config) 1 $ \pool -> liftIO $ runMigrations pool
+  withSqlitePool (configDbPath config) 1 $ \pool ->
+    liftIO $ S.runMigrations pool
 
 startServer :: Config -> IO ()
-startServer config = run (configPort config) (app (configDbPath config))
+startServer config =
+  runStderrLoggingT $
+  withSqlitePool (configDbPath config) 5 $ \pool ->
+    liftIO $ run (configPort config) $ logStdoutDev $ app pool

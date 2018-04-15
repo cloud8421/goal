@@ -1,17 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 module Api.Project where
 
-import Data.Aeson
-import Data.Aeson.TH
+import Database.Persist.Sqlite (Entity)
+import Schema
 import Servant
 
-newtype Project = Project
-  { projectId :: Int
-  }
-
-$(deriveJSON defaultOptions ''Project)
-
-type ProjectApi = "projects" :> Get '[ JSON] [Project]
+type ProjectApi = "projects" :> Get '[ JSON] [Entity Project]
