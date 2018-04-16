@@ -7,9 +7,9 @@ import Database.Persist.Sqlite (Entity)
 import Schema
 import Servant
 
-type GetProjects = "projects" :> Get '[ JSON] [Entity Project]
+type GetProjects = Get '[ JSON] [Entity Project]
 
 type PostProjects
-   = "projects" :> ReqBody '[ JSON] Project :> PostCreated '[ JSON] (Key Project)
+   = ReqBody '[ JSON] Project :> PostCreated '[ JSON] (Key Project)
 
-type ProjectApi = GetProjects :<|> PostProjects
+type ProjectApi = "projects" :> ( GetProjects :<|> PostProjects )
