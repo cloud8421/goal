@@ -12,4 +12,7 @@ type GetProjects = Get '[ JSON] [Entity Project]
 type PostProjects
    = ReqBody '[ JSON] Project :> PostCreated '[ JSON] (Key Project)
 
-type ProjectApi = "projects" :> ( GetProjects :<|> PostProjects )
+type DeleteProject
+   = Capture "patient_id" (Key Project) :> DeleteNoContent '[ JSON] NoContent
+
+type ProjectApi = "projects" :> (GetProjects :<|> PostProjects :<|> DeleteProject)

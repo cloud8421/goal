@@ -66,9 +66,15 @@ spec =
       let reqBody = [json|{"name":"New Project"}|]
       let req = jsonPost "/api/projects" reqBody
       it "responds successfully" $ req `shouldRespondWith` 201
+    context "DELETE /api/projects/<project-id>" $ do
+      let req = jsonDelete "/api/projects/1"
+      it "responds successfully" $ req `shouldRespondWith` 204
 
 jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
 jsonPost path = request methodPost path [(hContentType, "application/json")]
 
 jsonGet :: ByteString -> WaiSession SResponse
 jsonGet path = request methodGet path [(hContentType, "application/json")] ""
+
+jsonDelete :: ByteString -> WaiSession SResponse
+jsonDelete path = request methodDelete path [(hContentType, "application/json")] ""

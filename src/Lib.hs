@@ -29,11 +29,14 @@ app :: ConnectionPool -> Application
 app pool = serve api (server pool)
 
 server :: ConnectionPool -> Server API
-server pool = homePage :<|> getAllProjects :<|> createProject
+server pool = homePage :<|> getAllProjects :<|> createProject :<|> deleteProject
   where
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
     createProject project = liftIO $ S.createProject pool project
+    deleteProject projectId = do
+      liftIO $ S.deleteProject pool projectId
+      return NoContent
 
 migrate :: Config -> IO ()
 migrate config =
