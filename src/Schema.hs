@@ -24,5 +24,9 @@ share
   [persistLowerCase|
 Project json
     name Text
-    deriving  Eq Show Generic
+    deriving Eq Show Generic
+Goal json
+    projectId ProjectId
+    description Text
+    deriving Eq Show Generic
 |]
