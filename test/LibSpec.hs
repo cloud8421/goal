@@ -76,6 +76,10 @@ spec =
     context "DELETE /api/projects/<project-id>" $ do
       let req = jsonDelete "/api/projects/2"
       it "responds successfully" $ req `shouldRespondWith` 204
+    context "PUT /api/projects/<project-id> with valid id" $ do
+      let reqBody = [json|{"name":"Updated Project"}|]
+      let req = jsonPut "/api/projects/1" reqBody
+      it "responds successfully" $ req `shouldRespondWith` 204
     context "POST /api/projects/<project-id>/goals with valid id" $ do
       let reqBody = [json|{"description":"New goal"}|]
       let req = jsonPost "/api/projects/1/goals" reqBody
@@ -97,3 +101,6 @@ jsonGet path = request methodGet path [(hContentType, "application/json")] ""
 jsonDelete :: ByteString -> WaiSession SResponse
 jsonDelete path =
   request methodDelete path [(hContentType, "application/json")] ""
+
+jsonPut :: ByteString -> LB.ByteString -> WaiSession SResponse
+jsonPut path = request methodPut path [(hContentType, "application/json")]

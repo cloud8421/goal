@@ -36,7 +36,8 @@ server :: ConnectionPool -> Server API
 server pool = homePage :<|> (projectsApi :<|> goalsApi)
   where
     projectsApi =
-      getAllProjects :<|> getProject :<|> createProject :<|> deleteProject
+      getAllProjects :<|> getProject :<|> putProject :<|> createProject :<|>
+      deleteProject
     goalsApi = createGoal :<|> deleteGoal
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
@@ -49,6 +50,9 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi)
     createProject project = liftIO $ S.createProject pool project
     deleteProject projectId = do
       liftIO $ S.deleteProject pool projectId
+      return NoContent
+    putProject projectId newProject = do
+      liftIO $ S.updateProject pool projectId newProject
       return NoContent
     createGoal projectId g =
       liftIO (S.createGoal pool projectId g) `catch`

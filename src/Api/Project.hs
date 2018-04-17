@@ -15,8 +15,11 @@ type GetProject
 type PostProjects
    = ReqBody '[ JSON] Project :> PostCreated '[ JSON] (Key Project)
 
+type PutProject
+   = Capture "project_id" (Key Project) :> ReqBody '[ JSON] Project :> PutNoContent '[ JSON] NoContent
+
 type DeleteProject
    = Capture "project_id" (Key Project) :> DeleteNoContent '[ JSON] NoContent
 
 type ProjectApi
-   = "projects" :> (GetProjects :<|> GetProject :<|> PostProjects :<|> DeleteProject)
+   = "projects" :> (GetProjects :<|> GetProject :<|> PutProject :<|> PostProjects :<|> DeleteProject)
