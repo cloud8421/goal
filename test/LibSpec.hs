@@ -91,6 +91,10 @@ spec =
     context "DELETE /api/goals/<goal-id>" $ do
       let req = jsonDelete "/api/goals/1"
       it "responds successfully" $ req `shouldRespondWith` 204
+    context "PUT /api/goals/<goal-id> with valid id" $ do
+      let reqBody = [json|{"description":"Updated Goal"}|]
+      let req = jsonPut "/api/goals/2" reqBody
+      it "responds successfully" $ req `shouldRespondWith` 204
 
 jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
 jsonPost path = request methodPost path [(hContentType, "application/json")]

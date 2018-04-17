@@ -7,10 +7,12 @@ import Schema
 import Servant
 
 type PostGoals
-   = ReqBody '[ JSON] GoalWithoutProjectId :> PostCreated '[ JSON] (Key Goal)
+   = "projects" :> Capture "project_id" (Key Project) :> "goals" :> ReqBody '[ JSON] GoalWithoutProjectId :> PostCreated '[ JSON] (Key Goal)
 
 type DeleteGoal
-   = Capture "goal_id" (Key Goal) :> DeleteNoContent '[ JSON] NoContent
+   = "goals" :> Capture "goal_id" (Key Goal) :> DeleteNoContent '[ JSON] NoContent
 
-type GoalApi
-   = "projects" :> Capture "project_id" (Key Project) :> "goals" :> PostGoals :<|> "goals" :> DeleteGoal
+type PutGoal
+   = "goals" :> Capture "goal_id" (Key Goal) :> ReqBody '[ JSON] GoalWithoutProjectId :> PutNoContent '[ JSON] NoContent
+
+type GoalApi = PostGoals :<|> DeleteGoal :<|> PutGoal
