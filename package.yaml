@@ -16,6 +16,7 @@ dependencies:
 - aeson
 - aeson-casing
 - blaze-html
+- exceptions
 - file-embed
 - http-types
 - monad-logger

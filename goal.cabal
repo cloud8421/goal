@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: adef45293a14d33ae0e754ab1cd5721e24eccc8fe9753b4741ad92bd075d5cb3
+-- hash: 1fe50539dfb6e2c625b93d34172657345cfd8aeb2aabb62383ffa05e1ad05d24
 
 name:           goal
 version:        0.1.0.0
@@ -34,6 +34,7 @@ library
     , aeson-casing
     , base >=4.7 && <5
     , blaze-html
+    , exceptions
     , file-embed
     , http-types
     , monad-logger
@@ -78,6 +79,7 @@ executable goal
     , aeson-casing
     , base >=4.7 && <5
     , blaze-html
+    , exceptions
     , file-embed
     , goal
     , http-types
@@ -119,6 +121,7 @@ test-suite goal-test
     , blaze-html
     , bytestring
     , directory
+    , exceptions
     , file-embed
     , goal
     , hspec >=2.0.0

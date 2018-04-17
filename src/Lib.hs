@@ -10,6 +10,8 @@ module Lib
 import Api.Goal
 import Api.Project
 import Config
+import Control.Exception (SomeException(..))
+import Control.Monad.Catch (catch)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Logger (runStderrLoggingT)
 import Database.Persist.Sqlite (ConnectionPool, withSqlitePool)
@@ -48,7 +50,9 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi)
     deleteProject projectId = do
       liftIO $ S.deleteProject pool projectId
       return NoContent
-    createGoal projectId g = liftIO $ S.createGoal pool projectId g
+    createGoal projectId g =
+      liftIO (S.createGoal pool projectId g) `catch`
+      (\(SomeException _) -> Handler $ throwError err400)
 
 migrate :: Config -> IO ()
 migrate config =
