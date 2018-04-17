@@ -7,6 +7,7 @@ module Lib
   , startServer
   ) where
 
+import Api.Goal
 import Api.Project
 import Config
 import Control.Monad.IO.Class (liftIO)
@@ -21,7 +22,7 @@ import Servant
 import qualified Store as S
 import qualified Template as T
 
-type API = T.Root :<|> "api" :> ProjectApi
+type API = T.Root :<|> "api" :> (ProjectApi :<|> GoalApi)
 
 api :: Proxy API
 api = Proxy
@@ -30,10 +31,11 @@ app :: ConnectionPool -> Application
 app pool = serve api (server pool)
 
 server :: ConnectionPool -> Server API
-server pool =
-  homePage :<|> getAllProjects :<|> getProject :<|> createProject :<|>
-  deleteProject
+server pool = homePage :<|> (projectsApi :<|> goalsApi)
   where
+    projectsApi =
+      getAllProjects :<|> getProject :<|> createProject :<|> deleteProject
+    goalsApi = createGoal
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
     getProject projectId = do
@@ -46,6 +48,7 @@ server pool =
     deleteProject projectId = do
       liftIO $ S.deleteProject pool projectId
       return NoContent
+    createGoal projectId g = liftIO $ S.createGoal pool projectId g
 
 migrate :: Config -> IO ()
 migrate config =

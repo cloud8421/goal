@@ -39,6 +39,14 @@ data ProjectWithGoals = ProjectWithGoals
   , goals :: [Entity Goal]
   }
 
+data GoalWithoutProjectId = GoalWithoutProjectId
+  { description :: Text
+  } deriving (Eq, Show, Generic)
+
+instance ToJSON GoalWithoutProjectId
+
+instance FromJSON GoalWithoutProjectId
+
 instance ToJSON ProjectWithGoals where
   toJSON projectWithGoals =
     object
