@@ -20,8 +20,8 @@ import Lib (app)
 import Network.HTTP.Types
 import Network.Wai (Application)
 import Network.Wai.Test (SResponse)
-import Schema (Project(..))
-import Store (createProject, runMigrations)
+import Schema (GoalWithoutProjectId(..), Project(..))
+import Store (createGoal, createProject, runMigrations)
 import System.Directory (removeFile)
 import Test.Hspec
 import Test.Hspec.Wai
@@ -42,7 +42,8 @@ seedDb =
   runNoLoggingT $
   withSqlitePoolInfo connInfo 1 $ \pool -> do
     liftIO $ runMigrations pool
-    _ <- liftIO $ createProject pool (Project "example")
+    projectId <- liftIO $ createProject pool (Project "example")
+    _ <- liftIO $ createGoal pool projectId (GoalWithoutProjectId "example")
     return ()
 
 removeDbFile :: IO ()
@@ -83,6 +84,9 @@ spec =
       let reqBody = [json|{"description":"New goal"}|]
       let req = jsonPost "/api/projects/999/goals" reqBody
       it "responds successfully" $ req `shouldRespondWith` 400
+    context "DELETE /api/goals/<goal-id>" $ do
+      let req = jsonDelete "/api/goals/1"
+      it "responds successfully" $ req `shouldRespondWith` 204
 
 jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
 jsonPost path = request methodPost path [(hContentType, "application/json")]

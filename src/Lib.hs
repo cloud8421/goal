@@ -37,7 +37,7 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi)
   where
     projectsApi =
       getAllProjects :<|> getProject :<|> createProject :<|> deleteProject
-    goalsApi = createGoal
+    goalsApi = createGoal :<|> deleteGoal
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
     getProject projectId = do
@@ -53,6 +53,9 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi)
     createGoal projectId g =
       liftIO (S.createGoal pool projectId g) `catch`
       (\(SomeException _) -> Handler $ throwError err400)
+    deleteGoal goalId = do
+      liftIO $ S.deleteGoal pool goalId
+      return NoContent
 
 migrate :: Config -> IO ()
 migrate config =

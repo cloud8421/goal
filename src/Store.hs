@@ -27,3 +27,6 @@ createGoal ::
 createGoal pool pjId goalWithoutPjId = runSqlPool (insert goal) pool
   where
     goal = Goal pjId (description goalWithoutPjId)
+
+deleteGoal :: ConnectionPool -> Key Goal -> IO ()
+deleteGoal pool goalId = runSqlPool (delete goalId) pool
