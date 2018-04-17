@@ -16,6 +16,7 @@ import Network.Wai
 import Network.Wai.Handler.Warp (run)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Network.Wai.Middleware.Static ((>->), addBase, noDots, staticPolicy)
+import qualified Schema
 import Servant
 import qualified Store as S
 import qualified Template as T
@@ -37,9 +38,10 @@ server pool =
     getAllProjects = liftIO $ S.getAllProjects pool
     getProject projectId = do
       maybeProject <- liftIO $ S.findProject pool projectId
+      goals <- liftIO $ S.findGoals pool projectId
       case maybeProject of
         Nothing -> Handler $ throwError err404
-        Just project -> return project
+        Just project -> return $ Schema.ProjectWithGoals project goals
     createProject project = liftIO $ S.createProject pool project
     deleteProject projectId = do
       liftIO $ S.deleteProject pool projectId

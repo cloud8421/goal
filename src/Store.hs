@@ -11,10 +11,13 @@ getAllProjects :: ConnectionPool -> IO [Entity Project]
 getAllProjects = runSqlPool (selectList [] [])
 
 findProject :: ConnectionPool -> Key Project -> IO (Maybe (Entity Project))
-findProject pool projectId = runSqlPool (getEntity projectId) pool
+findProject pool pjId = runSqlPool (getEntity pjId) pool
 
 createProject :: ConnectionPool -> Project -> IO (Key Project)
-createProject pool project = runSqlPool (insert project) pool
+createProject pool pj = runSqlPool (insert pj) pool
 
 deleteProject :: ConnectionPool -> Key Project -> IO ()
-deleteProject pool projectId = runSqlPool (delete projectId) pool
+deleteProject pool pjId = runSqlPool (delete pjId) pool
+
+findGoals :: ConnectionPool -> Key Project -> IO [Entity Goal]
+findGoals pool pjId = runSqlPool (selectList [GoalProjectId ==. pjId] []) pool

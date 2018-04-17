@@ -2,6 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE QuasiQuotes #-}
@@ -9,7 +10,9 @@
 
 module Schema where
 
+import Data.Aeson
 import Data.Text (Text)
+import Database.Persist (Entity(..))
 import Database.Persist.TH
   ( mkMigrate
   , mkPersist
@@ -30,3 +33,15 @@ Goal json
     description Text
     deriving Eq Show Generic
 |]
+
+data ProjectWithGoals = ProjectWithGoals
+  { project :: Entity Project
+  , goals :: [Entity Goal]
+  }
+
+instance ToJSON ProjectWithGoals where
+  toJSON projectWithGoals =
+    object
+      ["id" .= uid, "name" .= projectName pj, "goals" .= goals projectWithGoals]
+    where
+      (Entity uid pj) = project projectWithGoals

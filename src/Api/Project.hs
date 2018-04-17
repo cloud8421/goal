@@ -10,7 +10,7 @@ import Servant
 type GetProjects = Get '[ JSON] [Entity Project]
 
 type GetProject
-   = Capture "project_id" (Key Project) :> Get '[ JSON] (Entity Project)
+   = Capture "project_id" (Key Project) :> Get '[ JSON] ProjectWithGoals
 
 type PostProjects
    = ReqBody '[ JSON] Project :> PostCreated '[ JSON] (Key Project)
