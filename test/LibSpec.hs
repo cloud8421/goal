@@ -62,6 +62,12 @@ spec =
       let respBody = [json|[{"id":1,"name":"example"}]|]
       it "responds successfully" $ req `shouldRespondWith` 200
       it "responds with []" $ req `shouldRespondWith` respBody
+    context "GET /api/projects/<project-id> with valid id" $ do
+      let req = jsonGet "/api/projects/1"
+      it "responds successfully" $ req `shouldRespondWith` 200
+    context "GET /api/projects/<project-id> with invalid id" $ do
+      let req = jsonGet "/api/projects/999"
+      it "responds successfully" $ req `shouldRespondWith` 404
     context "POST /api/projects" $ do
       let reqBody = [json|{"name":"New Project"}|]
       let req = jsonPost "/api/projects" reqBody
@@ -77,4 +83,5 @@ jsonGet :: ByteString -> WaiSession SResponse
 jsonGet path = request methodGet path [(hContentType, "application/json")] ""
 
 jsonDelete :: ByteString -> WaiSession SResponse
-jsonDelete path = request methodDelete path [(hContentType, "application/json")] ""
+jsonDelete path =
+  request methodDelete path [(hContentType, "application/json")] ""

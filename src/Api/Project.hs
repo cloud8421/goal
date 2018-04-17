@@ -9,10 +9,14 @@ import Servant
 
 type GetProjects = Get '[ JSON] [Entity Project]
 
+type GetProject
+   = Capture "project_id" (Key Project) :> Get '[ JSON] (Entity Project)
+
 type PostProjects
    = ReqBody '[ JSON] Project :> PostCreated '[ JSON] (Key Project)
 
 type DeleteProject
-   = Capture "patient_id" (Key Project) :> DeleteNoContent '[ JSON] NoContent
+   = Capture "project_id" (Key Project) :> DeleteNoContent '[ JSON] NoContent
 
-type ProjectApi = "projects" :> (GetProjects :<|> PostProjects :<|> DeleteProject)
+type ProjectApi
+   = "projects" :> (GetProjects :<|> GetProject :<|> PostProjects :<|> DeleteProject)

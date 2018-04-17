@@ -29,10 +29,17 @@ app :: ConnectionPool -> Application
 app pool = serve api (server pool)
 
 server :: ConnectionPool -> Server API
-server pool = homePage :<|> getAllProjects :<|> createProject :<|> deleteProject
+server pool =
+  homePage :<|> getAllProjects :<|> getProject :<|> createProject :<|>
+  deleteProject
   where
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
+    getProject projectId = do
+      maybeProject <- liftIO $ S.findProject pool projectId
+      case maybeProject of
+        Nothing -> Handler $ throwError err404
+        Just project -> return project
     createProject project = liftIO $ S.createProject pool project
     deleteProject projectId = do
       liftIO $ S.deleteProject pool projectId
