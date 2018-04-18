@@ -1,17 +1,11 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
-
 module Lib
   ( app
   , migrate
   , startServer
   ) where
 
-import Api.Goal
-import Api.Project
+import Api
 import Config
-import Control.Exception (SomeException(..))
-import Control.Monad.Catch (catch)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Logger (runStderrLoggingT)
 import Database.Persist.Sqlite (ConnectionPool, withSqlitePool)
@@ -19,12 +13,8 @@ import Network.Wai
 import Network.Wai.Handler.Warp (run)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Network.Wai.Middleware.Static ((>->), addBase, noDots, staticPolicy)
-import qualified Schema
 import Servant
-import qualified Store as S
-import qualified Template as T
-
-type API = T.Root :<|> "api" :> (ProjectApi :<|> GoalApi)
+import Store
 
 api :: Proxy API
 api = Proxy
@@ -32,43 +22,10 @@ api = Proxy
 app :: ConnectionPool -> Application
 app pool = serve api (server pool)
 
-server :: ConnectionPool -> Server API
-server pool = homePage :<|> (projectsApi :<|> goalsApi)
-  where
-    projectsApi =
-      getAllProjects :<|> getProject :<|> putProject :<|> createProject :<|>
-      deleteProject
-    goalsApi = createGoal :<|> deleteGoal :<|> putGoal
-    homePage = return T.home
-    getAllProjects = liftIO $ S.getAllProjects pool
-    getProject projectId = do
-      maybeProject <- liftIO $ S.findProject pool projectId
-      goals <- liftIO $ S.findGoals pool projectId
-      case maybeProject of
-        Nothing -> Handler $ throwError err404
-        Just project -> return $ Schema.ProjectWithGoals project goals
-    createProject project = liftIO $ S.createProject pool project
-    deleteProject projectId = do
-      liftIO $ S.deleteProject pool projectId
-      return NoContent
-    putProject projectId newProject = do
-      liftIO $ S.updateProject pool projectId newProject
-      return NoContent
-    createGoal projectId g =
-      liftIO (S.createGoal pool projectId g) `catch`
-      (\(SomeException _) -> Handler $ throwError err400)
-    deleteGoal goalId = do
-      liftIO $ S.deleteGoal pool goalId
-      return NoContent
-    putGoal goalId newGoal = do
-      liftIO $ S.updateGoal pool goalId newGoal
-      return NoContent
-
 migrate :: Config -> IO ()
 migrate config =
   runStderrLoggingT $
-  withSqlitePool (configDbPath config) 1 $ \pool ->
-    liftIO $ S.runMigrations pool
+  withSqlitePool (configDbPath config) 1 $ \pool -> liftIO $ runMigrations pool
 
 staticMiddleware :: Middleware
 staticMiddleware = staticPolicy (noDots >-> addBase "static")
