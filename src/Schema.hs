@@ -52,9 +52,17 @@ data GoalWithoutProjectId = GoalWithoutProjectId
   { description :: Text
   } deriving (Eq, Show, Generic)
 
+data ActionWithoutGoalId = ActionWithoutGoalId
+  { summary :: Text
+  } deriving (Eq, Show, Generic)
+
 instance ToJSON GoalWithoutProjectId
 
 instance FromJSON GoalWithoutProjectId
+
+instance ToJSON ActionWithoutGoalId
+
+instance FromJSON ActionWithoutGoalId
 
 instance ToJSON ProjectWithGoals where
   toJSON projectWithGoals =

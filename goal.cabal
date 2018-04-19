@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a02f8705399945b42edfdb78e303c0b6db11d1fe8fd5a8302c472387ed41a65c
+-- hash: ef25428bb4bf6a6c881ae9414543626a39b48d03b1a9ce23cc70d769f9a6737c
 
 name:           goal
 version:        0.1.0.0
@@ -58,6 +58,7 @@ library
     ghc-options: -Wall -fwarn-tabs -O2
   exposed-modules:
       Api
+      Api.Action
       Api.Goal
       Api.Project
       Config
@@ -100,6 +101,7 @@ executable goal
     , warp
   other-modules:
       Api
+      Api.Action
       Api.Goal
       Api.Project
       Config

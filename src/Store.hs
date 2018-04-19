@@ -47,3 +47,18 @@ updateGoal pool goalId goalWithoutPjId =
 findActions :: ConnectionPool -> Key Goal -> IO [Entity Action]
 findActions pool goalId =
   runSqlPool (selectList [ActionGoalId ==. goalId] []) pool
+
+createAction ::
+     ConnectionPool -> Key Goal -> ActionWithoutGoalId -> IO (Key Action)
+createAction pool goalId actionWithoutGoalId = runSqlPool (insert a) pool
+  where
+    a = Action goalId (summary actionWithoutGoalId)
+
+deleteAction :: ConnectionPool -> Key Action -> IO ()
+deleteAction pool actionId = runSqlPool (delete actionId) pool
+
+updateAction :: ConnectionPool -> Key Action -> ActionWithoutGoalId -> IO ()
+updateAction pool actionId actionWithoutGoalId =
+  runSqlPool
+    (update actionId [ActionSummary =. summary actionWithoutGoalId])
+    pool

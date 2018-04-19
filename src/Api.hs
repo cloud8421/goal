@@ -6,6 +6,7 @@ module Api
   , API
   ) where
 
+import Api.Action
 import Api.Goal
 import Api.Project
 import Control.Exception (SomeException(..))
@@ -17,15 +18,16 @@ import Servant
 import qualified Store as S
 import qualified Template as T
 
-type API = T.Root :<|> "api" :> (ProjectApi :<|> GoalApi)
+type API = T.Root :<|> "api" :> (ProjectApi :<|> GoalApi :<|> ActionApi)
 
 server :: ConnectionPool -> Server API
-server pool = homePage :<|> (projectsApi :<|> goalsApi)
+server pool = homePage :<|> (projectsApi :<|> goalsApi :<|> actionApi)
   where
     projectsApi =
       getAllProjects :<|> getProject :<|> putProject :<|> createProject :<|>
       deleteProject
     goalsApi = createGoal :<|> getGoal :<|> deleteGoal :<|> putGoal
+    actionApi = createAction :<|> deleteAction :<|> putAction
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
     getProject projectId = do
@@ -55,4 +57,13 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi)
       return NoContent
     putGoal goalId newGoal = do
       liftIO $ S.updateGoal pool goalId newGoal
+      return NoContent
+    createAction goalId a =
+      liftIO (S.createAction pool goalId a) `catch`
+      (\(SomeException _) -> Handler $ throwError err400)
+    deleteAction actionId = do
+      liftIO $ S.deleteAction pool actionId
+      return NoContent
+    putAction actionId newAction = do
+      liftIO $ S.updateAction pool actionId newAction
       return NoContent
