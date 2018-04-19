@@ -32,11 +32,20 @@ Goal json
     projectId ProjectId
     description Text
     deriving Eq Show Generic
+Action json
+    goalId GoalId
+    summary Text
+    deriving Eq Show Generic
 |]
 
 data ProjectWithGoals = ProjectWithGoals
   { project :: Entity Project
   , goals :: [Entity Goal]
+  }
+
+data GoalWithActions = GoalWithActions
+  { goal :: Entity Goal
+  , actions :: [Entity Action]
   }
 
 data GoalWithoutProjectId = GoalWithoutProjectId
@@ -53,3 +62,14 @@ instance ToJSON ProjectWithGoals where
       ["id" .= uid, "name" .= projectName pj, "goals" .= goals projectWithGoals]
     where
       (Entity uid pj) = project projectWithGoals
+
+instance ToJSON GoalWithActions where
+  toJSON goalWithActions =
+    object
+      [ "id" .= uid
+      , "projectId" .= goalProjectId g
+      , "description" .= goalDescription g
+      , "actions" .= actions goalWithActions
+      ]
+    where
+      (Entity uid g) = goal goalWithActions

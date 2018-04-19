@@ -26,11 +26,14 @@ updateProject pool projectId newProject =
 findGoals :: ConnectionPool -> Key Project -> IO [Entity Goal]
 findGoals pool pjId = runSqlPool (selectList [GoalProjectId ==. pjId] []) pool
 
+findGoal :: ConnectionPool -> Key Goal -> IO (Maybe (Entity Goal))
+findGoal pool goalId = runSqlPool (getEntity goalId) pool
+
 createGoal ::
      ConnectionPool -> Key Project -> GoalWithoutProjectId -> IO (Key Goal)
-createGoal pool pjId goalWithoutPjId = runSqlPool (insert goal) pool
+createGoal pool pjId goalWithoutPjId = runSqlPool (insert g) pool
   where
-    goal = Goal pjId (description goalWithoutPjId)
+    g = Goal pjId (description goalWithoutPjId)
 
 deleteGoal :: ConnectionPool -> Key Goal -> IO ()
 deleteGoal pool goalId = runSqlPool (delete goalId) pool
@@ -40,3 +43,7 @@ updateGoal pool goalId goalWithoutPjId =
   runSqlPool
     (update goalId [GoalDescription =. description goalWithoutPjId])
     pool
+
+findActions :: ConnectionPool -> Key Goal -> IO [Entity Action]
+findActions pool goalId =
+  runSqlPool (selectList [ActionGoalId ==. goalId] []) pool

@@ -95,6 +95,12 @@ spec =
       let reqBody = [json|{"description":"Updated Goal"}|]
       let req = jsonPut "/api/goals/2" reqBody
       it "responds successfully" $ req `shouldRespondWith` 204
+    context "GET /api/goals/<goal-id> with valid id" $ do
+      let req = jsonGet "/api/goals/2"
+      it "responds successfully" $ req `shouldRespondWith` 200
+    context "GET /api/goals/<goal-id> with invalid id" $ do
+      let req = jsonGet "/api/goals/999"
+      it "responds successfully" $ req `shouldRespondWith` 404
 
 jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
 jsonPost path = request methodPost path [(hContentType, "application/json")]
