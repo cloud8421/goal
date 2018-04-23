@@ -20,8 +20,8 @@ import Lib (app)
 import Network.HTTP.Types
 import Network.Wai (Application)
 import Network.Wai.Test (SResponse)
-import Schema (GoalWithoutProjectId(..), Project(..))
-import Store (createGoal, createProject, runMigrations)
+import Schema (ActionWithoutGoalId(..), GoalWithoutProjectId(..), Project(..))
+import Store (createAction, createGoal, createProject, runMigrations)
 import System.Directory (removeFile)
 import Test.Hspec
 import Test.Hspec.Wai
@@ -43,7 +43,10 @@ seedDb =
   withSqlitePoolInfo connInfo 1 $ \pool -> do
     liftIO $ runMigrations pool
     projectId <- liftIO $ createProject pool (Project "example")
-    _ <- liftIO $ createGoal pool projectId (GoalWithoutProjectId "example")
+    goalId <-
+      liftIO $ createGoal pool projectId (GoalWithoutProjectId "example")
+    _actionId <-
+      liftIO $ createAction pool goalId (ActionWithoutGoalId "example")
     return ()
 
 removeDbFile :: IO ()
@@ -58,6 +61,7 @@ spec =
     context "GET /" $ do
       let req = get "/"
       it "responds successfully" $ req `shouldRespondWith` 200
+    -- GET
     context "GET /api/projects" $ do
       let req = jsonGet "/api/projects"
       let respBody = [json|[{"id":1,"name":"example"}]|]
@@ -69,17 +73,17 @@ spec =
     context "GET /api/projects/<project-id> with invalid id" $ do
       let req = jsonGet "/api/projects/999"
       it "responds successfully" $ req `shouldRespondWith` 404
+    context "GET /api/goals/<goal-id> with valid id" $ do
+      let req = jsonGet "/api/goals/1"
+      it "responds successfully" $ req `shouldRespondWith` 200
+    context "GET /api/goals/<goal-id> with invalid id" $ do
+      let req = jsonGet "/api/goals/999"
+      it "responds successfully" $ req `shouldRespondWith` 404
+    -- POST
     context "POST /api/projects" $ do
       let reqBody = [json|{"name":"New Project"}|]
       let req = jsonPost "/api/projects" reqBody
       it "responds successfully" $ req `shouldRespondWith` 201
-    context "DELETE /api/projects/<project-id>" $ do
-      let req = jsonDelete "/api/projects/2"
-      it "responds successfully" $ req `shouldRespondWith` 204
-    context "PUT /api/projects/<project-id> with valid id" $ do
-      let reqBody = [json|{"name":"Updated Project"}|]
-      let req = jsonPut "/api/projects/1" reqBody
-      it "responds successfully" $ req `shouldRespondWith` 204
     context "POST /api/projects/<project-id>/goals with valid id" $ do
       let reqBody = [json|{"description":"New goal"}|]
       let req = jsonPost "/api/projects/1/goals" reqBody
@@ -88,19 +92,37 @@ spec =
       let reqBody = [json|{"description":"New goal"}|]
       let req = jsonPost "/api/projects/999/goals" reqBody
       it "responds successfully" $ req `shouldRespondWith` 400
-    context "DELETE /api/goals/<goal-id>" $ do
-      let req = jsonDelete "/api/goals/1"
+    context "POST /api/goals/<goal-id>/actions with valid id" $ do
+      let reqBody = [json|{"summary":"New action"}|]
+      let req = jsonPost "/api/goals/1/actions" reqBody
+      it "responds successfully" $ req `shouldRespondWith` 201
+    context "POST /api/goals/<goal-id>/actions with invalid id" $ do
+      let reqBody = [json|{"summary":"New action"}|]
+      let req = jsonPost "/api/goals/999/actions" reqBody
+      it "responds successfully" $ req `shouldRespondWith` 400
+    -- PUT
+    context "PUT /api/projects/<project-id> with valid id" $ do
+      let reqBody = [json|{"name":"Updated Project"}|]
+      let req = jsonPut "/api/projects/1" reqBody
       it "responds successfully" $ req `shouldRespondWith` 204
     context "PUT /api/goals/<goal-id> with valid id" $ do
       let reqBody = [json|{"description":"Updated Goal"}|]
-      let req = jsonPut "/api/goals/2" reqBody
+      let req = jsonPut "/api/goals/1" reqBody
       it "responds successfully" $ req `shouldRespondWith` 204
-    context "GET /api/goals/<goal-id> with valid id" $ do
-      let req = jsonGet "/api/goals/2"
-      it "responds successfully" $ req `shouldRespondWith` 200
-    context "GET /api/goals/<goal-id> with invalid id" $ do
-      let req = jsonGet "/api/goals/999"
-      it "responds successfully" $ req `shouldRespondWith` 404
+    context "PUT /api/actions/<action-id> with valid id" $ do
+      let reqBody = [json|{"summary":"Updated action"}|]
+      let req = jsonPut "/api/actions/1" reqBody
+      it "responds successfully" $ req `shouldRespondWith` 204
+    -- DELETE
+    context "DELETE /api/goals/<goal-id>" $ do
+      let req = jsonDelete "/api/goals/1"
+      it "responds successfully" $ req `shouldRespondWith` 204
+    context "DELETE /api/projects/<project-id>" $ do
+      let req = jsonDelete "/api/projects/2"
+      it "responds successfully" $ req `shouldRespondWith` 204
+    context "DELETE /api/actions/<action-id>" $ do
+      let req = jsonDelete "/api/actions/1"
+      it "responds successfully" $ req `shouldRespondWith` 204
 
 jsonPost :: ByteString -> LB.ByteString -> WaiSession SResponse
 jsonPost path = request methodPost path [(hContentType, "application/json")]

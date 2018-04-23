@@ -14,7 +14,8 @@ import Data.Aeson
 import Data.Text (Text)
 import Database.Persist (Entity(..))
 import Database.Persist.TH
-  ( mkMigrate
+  ( mkDeleteCascade
+  , mkMigrate
   , mkPersist
   , persistLowerCase
   , share
@@ -23,7 +24,7 @@ import Database.Persist.TH
 import GHC.Generics
 
 share
-  [mkPersist sqlSettings, mkMigrate "migrateAll"]
+  [mkPersist sqlSettings, mkDeleteCascade sqlSettings, mkMigrate "migrateAll"]
   [persistLowerCase|
 Project json
     name Text
