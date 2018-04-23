@@ -21,7 +21,8 @@ parser =
     (command "start" (info (startServer <$> configParser) startDesc) <>
      command "migrate" (info (migrate <$> configParser) migrateDesc))
   where
-    configParser = Config <$> databaseFileOption <*> portOption
+    configParser =
+      Config <$> databaseFileOption <*> portOption <*> embeddedOption
     startDesc = progDesc "Start Goals server"
     migrateDesc = progDesc "Setup Goals database"
 
@@ -39,6 +40,12 @@ portOption =
     (long "port" <> short 'p' <> metavar "PORT" <> value defaultPort <>
      showDefault <>
      help "Which port to run the server on")
+
+embeddedOption :: Parser Bool
+embeddedOption =
+  switch
+    (long "embedded" <> short 'e' <> showDefault <>
+     help "Run the app in embedded mode")
 
 main :: IO ()
 main = join $ execParser opts

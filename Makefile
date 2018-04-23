@@ -12,6 +12,10 @@ start:
 	stack exec goal start -- --database-file $(DB_FILE)
 .PHONY: start
 
+start-embedded:
+	stack exec goal start -- --database-file $(DB_FILE) --embedded
+.PHONY: start
+
 migrate:
 	stack exec goal migrate -- --database-file $(DB_FILE)
 .PHONY: migrate
