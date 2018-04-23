@@ -1,11 +1,15 @@
 module Store where
 
+import Data.Text (Text)
 import Database.Persist
 import Database.Persist.Sqlite
 import Schema
 
 runMigrations :: ConnectionPool -> IO ()
 runMigrations = runSqlPool (runMigration migrateAll)
+
+runMigrationsSilent :: ConnectionPool -> IO [Text]
+runMigrationsSilent = runSqlPool (runMigrationSilent migrateAll)
 
 getAllProjects :: ConnectionPool -> IO [Entity Project]
 getAllProjects = runSqlPool (selectList [] [])

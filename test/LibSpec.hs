@@ -21,7 +21,7 @@ import Network.HTTP.Types
 import Network.Wai (Application)
 import Network.Wai.Test (SResponse)
 import Schema (ActionWithoutGoalId(..), GoalWithoutProjectId(..), Project(..))
-import Store (createAction, createGoal, createProject, runMigrations)
+import Store (createAction, createGoal, createProject, runMigrationsSilent)
 import System.Directory (removeFile)
 import Test.Hspec
 import Test.Hspec.Wai
@@ -41,7 +41,7 @@ seedDb :: IO ()
 seedDb =
   runNoLoggingT $
   withSqlitePoolInfo connInfo 1 $ \pool -> do
-    liftIO $ runMigrations pool
+    _ <- liftIO $ runMigrationsSilent pool
     projectId <- liftIO $ createProject pool (Project "example")
     goalId <-
       liftIO $ createGoal pool projectId (GoalWithoutProjectId "example")
