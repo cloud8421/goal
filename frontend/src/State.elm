@@ -5,7 +5,7 @@ import Types exposing (..)
 
 init : ( Model, Cmd Msg )
 init =
-    0 ! []
+    { projects = [] } ! []
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
