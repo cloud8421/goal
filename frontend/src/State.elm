@@ -1,6 +1,7 @@
 module State exposing (..)
 
 import Api
+import Dict
 import RemoteData exposing (RemoteData(..))
 import Types exposing (..)
 
@@ -20,7 +21,13 @@ update msg model =
             model ! [ Api.getProjects ]
 
         ProjectsResponse projects ->
-            { model | projects = projects } ! []
+            let
+                transformer ps =
+                    ps
+                        |> List.map (\p -> ( p.id, p ))
+                        |> Dict.fromList
+            in
+            { model | projects = RemoteData.map transformer projects } ! []
 
         GetProjectDetails projectId ->
             model ! [ Api.getProject projectId ]

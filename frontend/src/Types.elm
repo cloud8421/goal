@@ -1,5 +1,6 @@
 module Types exposing (..)
 
+import Dict exposing (Dict)
 import RemoteData exposing (WebData)
 
 
@@ -24,7 +25,7 @@ type alias Action =
 
 
 type alias Projects =
-    WebData (List Project)
+    WebData (Dict Int Project)
 
 
 type alias Model =
@@ -34,6 +35,6 @@ type alias Model =
 type Msg
     = NoOp
     | GetProjects
-    | ProjectsResponse Projects
+    | ProjectsResponse (WebData (List Project))
     | GetProjectDetails Int
     | ProjectDetailResponse (WebData Project)

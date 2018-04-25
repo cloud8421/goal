@@ -1,9 +1,11 @@
 module View exposing (..)
 
 import Bulma.Columns exposing (..)
+import Bulma.Components exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Layout exposing (..)
 import Bulma.Modifiers exposing (..)
+import Dict
 import Html exposing (Html, main_, p, text)
 import Html.Events exposing (onClick)
 import RemoteData as R
@@ -67,29 +69,20 @@ actionsColumn model =
 projectsList : Projects -> Html Msg
 projectsList projects =
     let
-        tableHeaders =
-            [ tableCellHead [] [ text "Name" ] ]
+        panelTop =
+            [ panelHeading [] [ title H4 [] [ text "Projects" ] ]
+            ]
 
-        projectRow item =
-            tableRow False
+        panelLinkItem item =
+            panelLink False
                 []
-                [ tableCell []
-                    [ p [ onClick (GetProjectDetails item.id) ] [ text item.name ]
-                    ]
+                [ p [ onClick (GetProjectDetails item.id) ] [ text item.name ]
                 ]
     in
     case projects of
         R.Success items ->
-            container []
-                [ table tableModifiers
-                    []
-                    [ tableHead [] tableHeaders
-                    , tableBody [] (List.map projectRow items)
-                    ]
-                ]
+            panel []
+                (panelTop ++ List.map panelLinkItem (Dict.values items))
 
         otherwise ->
-            container
-                []
-                [ title H4 [] [ text "N/A" ]
-                ]
+            title H4 [] [ text "N/A" ]
