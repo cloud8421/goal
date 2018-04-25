@@ -15,4 +15,14 @@ install:
 - stack --no-terminal --install-ghc test --only-dependencies
 
 script:
-- stack --no-terminal test 
+- stack --no-terminal test
+- stack install
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH_TOKEN
+  file: ~/.local/bin/goal
+  skip_cleanup: true
+  on:
+    tags: true
+
