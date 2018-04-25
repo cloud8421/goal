@@ -5,27 +5,29 @@ import RemoteData exposing (WebData)
 
 type Msg
     = NoOp
+    | GetProjects
+    | ProjectsResponse (WebData (List Project))
 
 
 type alias Model =
-    { projects : List Project }
+    { projects : WebData (List Project) }
 
 
 type alias Project =
-    { id : String
+    { id : Int
     , name : String
     , goals : WebData (List Goal)
     }
 
 
 type alias Goal =
-    { id : String
+    { id : Int
     , description : String
     , actions : WebData (List Action)
     }
 
 
 type alias Action =
-    { id : String
+    { id : Int
     , summary : String
     }
