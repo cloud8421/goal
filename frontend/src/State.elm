@@ -21,3 +21,13 @@ update msg model =
 
         ProjectsResponse projects ->
             { model | projects = projects } ! []
+
+        GetProjectDetails projectId ->
+            model ! [ Api.getProject projectId ]
+
+        ProjectDetailResponse project ->
+            let
+                dbg =
+                    Debug.log "project" project
+            in
+            model ! []

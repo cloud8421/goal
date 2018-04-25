@@ -12,3 +12,10 @@ getProjects =
     Http.get "/api/projects" D.projectsDecoder
         |> RemoteData.sendRequest
         |> Cmd.map ProjectsResponse
+
+
+getProject : Int -> Cmd Msg
+getProject projectId =
+    Http.get ("/api/projects/" ++ toString projectId) D.projectDecoder
+        |> RemoteData.sendRequest
+        |> Cmd.map ProjectDetailResponse

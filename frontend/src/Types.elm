@@ -3,16 +3,6 @@ module Types exposing (..)
 import RemoteData exposing (WebData)
 
 
-type Msg
-    = NoOp
-    | GetProjects
-    | ProjectsResponse (WebData (List Project))
-
-
-type alias Model =
-    { projects : WebData (List Project) }
-
-
 type alias Project =
     { id : Int
     , name : String
@@ -31,3 +21,19 @@ type alias Action =
     { id : Int
     , summary : String
     }
+
+
+type alias Projects =
+    WebData (List Project)
+
+
+type alias Model =
+    { projects : Projects }
+
+
+type Msg
+    = NoOp
+    | GetProjects
+    | ProjectsResponse Projects
+    | GetProjectDetails Int
+    | ProjectDetailResponse (WebData Project)

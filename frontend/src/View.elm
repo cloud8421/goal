@@ -4,41 +4,92 @@ import Bulma.Columns exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Layout exposing (..)
 import Bulma.Modifiers exposing (..)
-import Html exposing (Html, main_, text)
+import Html exposing (Html, main_, p, text)
+import Html.Events exposing (onClick)
+import RemoteData as R
 import Types exposing (..)
 
 
 root : Model -> Html Msg
 root model =
     main_ []
-        [ exampleHero model
-        , exampleColumns
+        [ topHero model
+        , activityColumns model
         ]
 
 
-exampleHero : Model -> Html msg
-exampleHero model =
-    hero { heroModifiers | size = Medium, color = Primary }
+topHero : Model -> Html msg
+topHero model =
+    hero { heroModifiers | size = Small, color = Primary }
         []
         [ heroBody []
             [ container []
-                [ title H1 [] [ text "Hero Title" ]
-                , title H2 [] [ model |> toString |> text ]
+                [ title H1 [] [ text "Goals" ]
                 ]
             ]
         ]
 
 
-exampleColumns : Html msg
-exampleColumns =
+activityColumns : Model -> Html Msg
+activityColumns model =
     section NotSpaced
         []
         [ container []
             [ columns columnsModifiers
                 []
-                [ column columnModifiers [] [ text "First Column" ]
-                , column columnModifiers [] [ text "Second Column" ]
-                , column columnModifiers [] [ text "Third Column" ]
+                [ projectsColumn model
+                , goalsColumn model
+                , actionsColumn model
                 ]
             ]
         ]
+
+
+projectsColumn : Model -> Html Msg
+projectsColumn model =
+    column columnModifiers
+        []
+        [ title H3 [] [ text "Projects" ]
+        , projectsList model.projects
+        ]
+
+
+goalsColumn : Model -> Html msg
+goalsColumn model =
+    column columnModifiers [] [ title H3 [] [ text "Goals" ] ]
+
+
+actionsColumn : Model -> Html msg
+actionsColumn model =
+    column columnModifiers [] [ title H3 [] [ text "Actions" ] ]
+
+
+projectsList : Projects -> Html Msg
+projectsList projects =
+    let
+        tableHeaders =
+            [ tableCellHead [] [ text "Name" ] ]
+
+        projectRow item =
+            tableRow False
+                []
+                [ tableCell []
+                    [ p [ onClick (GetProjectDetails item.id) ] [ text item.name ]
+                    ]
+                ]
+    in
+    case projects of
+        R.Success items ->
+            container []
+                [ table tableModifiers
+                    []
+                    [ tableHead [] tableHeaders
+                    , tableBody [] (List.map projectRow items)
+                    ]
+                ]
+
+        otherwise ->
+            container
+                []
+                [ title H4 [] [ text "N/A" ]
+                ]
