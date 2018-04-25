@@ -1,28 +1,31 @@
 sudo: false
 language: generic
+os:
+  - linux
+  - osx
 cache:
   directories:
   - "$HOME/.stack"
 before_install:
 - mkdir -p ~/.local/bin
 - export PATH=$HOME/.local/bin:$PATH
-- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards
-  --strip-components=1 -C ~/.local/bin '*/stack'
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install stack; fi
 install:
 - stack --no-terminal --install-ghc test --only-dependencies
 script:
 - stack --no-terminal test
 - stack install
-- cp ~/.local/bin/goal goal
-- sha1sum goal > goal.sha1
+- cp ~/.local/bin/goal goal-$TRAVIS_OS_NAME
+- sha1sum goal > goal-$TRAVIS_OS_NAME.sha1
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: CG8ssYCpkk5BUe8rMfnXyFxVY9dc7TllIPd2oFFJ59sfzTm0WUStC/d/ehAEAfiZY97CnVmPNYHyxT5+bIAcZDkwIBksfGquzFDB9siPa0j5F0+nV22QJJcTmuz14GG7lMgcwD/n7JWYf9T2VUbtFbLfGSwcZNmftoC4VxWMqCM8nb+F9zW/hncRAMLTwHT9kBwju48CTjJLiXN0TvSr38deS6hp8jX0IG+fN/kFVqlF8UXa5iRX6ExSRBQhmw4GA4gAcALyd2R21mITQcROe3ymNDiLrQOAYvaHO/ic2szSZvlbM3h56bqO2zL+mOxnZqPwooVX/VI4SJgItkcximFlot8E6McTQFYhPnZerjnrRBEEh2Se4L2IMMNfoMi2CBMlr1jthCfJZWDWt1pbfYaNcCIznDYf39bUvd8Kp2pxelqOxt2QytKJA/wrcpbFb7Vfdc/cIPvZ8LG6x50UHP+gabyuG7JjqznIyTMxg6NGDyV6eRZTEsfjx4uHiqeXBTtaWmbbDH6Yf/mB5EskKiw3NWlLBFJCRdkHHSOQcXPch3LYx6VZMnpM3+UiCPRSGlxO9wytpNUzuJDSoXxqC+r1E4j36zT22DKV5dAfl/9tzXsgE/xM2n2zXMMygBJvpQtWpcttCKJYZSjuPxuqU8meNU3OPshS2TX6RIMMQFM=
   file:
-  - goal
-  - goal.sha1
+  - goal-$TRAVIS_OS_NAME
+  - goal-$TRAVIS_OS_NAME.sha1
   on:
     tags: true
     repo: cloud8421/goal
