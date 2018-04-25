@@ -17,7 +17,7 @@ script:
 - stack --no-terminal test
 - stack install
 - cp ~/.local/bin/goal goal-$TRAVIS_OS_NAME
-- sha1sum goal > goal-$TRAVIS_OS_NAME.sha1
+- sha1sum goal-$TRAVIS_OS_NAME > goal-$TRAVIS_OS_NAME.sha1
 deploy:
   provider: releases
   skip_cleanup: true
