@@ -15,7 +15,7 @@ install:
 - stack --no-terminal --install-ghc test --only-dependencies
 - npm install -g elm
 script:
-- cd frontend; make; cd ..
+- cd frontend; travis_retry make; cd ..
 - stack --no-terminal test
 - stack install
 - cp ~/.local/bin/goal goal-$TRAVIS_OS_NAME
