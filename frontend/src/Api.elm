@@ -14,8 +14,8 @@ getProjects =
         |> Cmd.map ProjectsResponse
 
 
-getProject : Int -> Cmd Msg
-getProject projectId =
-    Http.get ("/api/projects/" ++ toString projectId) D.projectDecoder
+getProjectGoals : ProjectId -> Cmd Msg
+getProjectGoals projectId =
+    Http.get ("/api/projects/" ++ toString projectId ++ "/goals") D.goalsDecoder
         |> RemoteData.sendRequest
-        |> Cmd.map ProjectDetailResponse
+        |> Cmd.map ProjectGoalsResponse

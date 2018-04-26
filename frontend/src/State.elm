@@ -8,13 +8,22 @@ import Types exposing (..)
 
 init : ( Model, Cmd Msg )
 init =
-    { projects = NotAsked } ! [ Api.getProjects ]
+    { projects = NotAsked
+    , goals = NotAsked
+    , actions = NotAsked
+    , currentProject = Nothing
+    }
+        ! [ Api.getProjects ]
 
 
-intoDict : List Project -> Dict Int Project
+type alias Collectable a =
+    { a | id : Int }
+
+
+intoDict : List (Collectable a) -> Dict Int (Collectable a)
 intoDict collection =
     collection
-        |> List.map (\p -> ( p.id, p ))
+        |> List.map (\i -> ( i.id, i ))
         |> Dict.fromList
 
 
@@ -30,15 +39,12 @@ update msg model =
         ProjectsResponse projects ->
             { model | projects = RemoteData.map intoDict projects } ! []
 
-        GetProjectDetails projectId ->
-            model ! [ Api.getProject projectId ]
+        GetProjectGoals projectId ->
+            { model
+                | currentProject = Just projectId
+                , goals = Loading
+            }
+                ! [ Api.getProjectGoals projectId ]
 
-        ProjectDetailResponse project ->
-            let
-                addProject p ps =
-                    Dict.insert p.id p ps
-
-                newProjects =
-                    RemoteData.map2 addProject project model.projects
-            in
-            { projects = newProjects } ! []
+        ProjectGoalsResponse goals ->
+            { model | goals = RemoteData.map intoDict goals } ! []

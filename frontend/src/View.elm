@@ -56,9 +56,13 @@ projectsColumn model =
         ]
 
 
-goalsColumn : Model -> Html msg
+goalsColumn : Model -> Html Msg
 goalsColumn model =
-    column columnModifiers [] [ title H3 [] [ text "Goals" ] ]
+    column columnModifiers
+        []
+        [ title H3 [] [ text "Projects" ]
+        , goalsList model.goals
+        ]
 
 
 actionsColumn : Model -> Html msg
@@ -76,9 +80,8 @@ projectsList projects =
         panelLinkItem item =
             panelLink False
                 []
-                [ p [ onClick (GetProjectDetails item.id) ]
+                [ p [ onClick (GetProjectGoals item.id) ]
                     [ text item.name
-                    , text <| toString <| item.goals
                     ]
                 ]
     in
@@ -86,6 +89,36 @@ projectsList projects =
         R.Success items ->
             panel []
                 (panelTop ++ List.map panelLinkItem (Dict.values items))
+
+        R.Loading ->
+            title H4 [] [ text "Loading..." ]
+
+        otherwise ->
+            title H4 [] [ text "N/A" ]
+
+
+goalsList : Goals -> Html Msg
+goalsList goals =
+    let
+        panelTop =
+            [ panelHeading [] [ title H4 [] [ text "Goals" ] ]
+            ]
+
+        panelLinkItem item =
+            panelLink False
+                []
+                [ p []
+                    [ text item.description
+                    ]
+                ]
+    in
+    case goals of
+        R.Success items ->
+            panel []
+                (panelTop ++ List.map panelLinkItem (Dict.values items))
+
+        R.Loading ->
+            title H4 [] [ text "Loading..." ]
 
         otherwise ->
             title H4 [] [ text "N/A" ]

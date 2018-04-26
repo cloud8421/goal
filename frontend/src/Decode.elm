@@ -32,3 +32,8 @@ projectDecoder =
 projectsDecoder : Decoder (List Project)
 projectsDecoder =
     list projectDecoder
+
+
+goalsDecoder : Decoder (List Goal)
+goalsDecoder =
+    list goalDecoder

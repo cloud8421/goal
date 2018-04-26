@@ -4,8 +4,12 @@ import Dict exposing (Dict)
 import RemoteData exposing (WebData)
 
 
+type alias ProjectId =
+    Int
+
+
 type alias Project =
-    { id : Int
+    { id : ProjectId
     , name : String
     , goals : WebData (List Goal)
     }
@@ -28,13 +32,25 @@ type alias Projects =
     WebData (Dict Int Project)
 
 
+type alias Goals =
+    WebData (Dict Int Goal)
+
+
+type alias Actions =
+    WebData (Dict Int Action)
+
+
 type alias Model =
-    { projects : Projects }
+    { projects : Projects
+    , goals : Goals
+    , actions : Actions
+    , currentProject : Maybe Int
+    }
 
 
 type Msg
     = NoOp
     | GetProjects
     | ProjectsResponse (WebData (List Project))
-    | GetProjectDetails Int
-    | ProjectDetailResponse (WebData Project)
+    | GetProjectGoals ProjectId
+    | ProjectGoalsResponse (WebData (List Goal))
