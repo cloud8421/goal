@@ -1,5 +1,5 @@
 sudo: false
-language: generic
+language: node
 os:
   - linux
   - osx
@@ -13,7 +13,9 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew install stack; fi
 install:
 - stack --no-terminal --install-ghc test --only-dependencies
+- npm install -g elm
 script:
+- cd frontend; make; cd ..
 - stack --no-terminal test
 - stack install
 - cp ~/.local/bin/goal goal-$TRAVIS_OS_NAME
