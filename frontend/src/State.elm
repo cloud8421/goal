@@ -1,7 +1,7 @@
 module State exposing (..)
 
 import Api
-import Dict
+import Dict exposing (Dict)
 import RemoteData exposing (RemoteData(..))
 import Types exposing (..)
 
@@ -9,6 +9,13 @@ import Types exposing (..)
 init : ( Model, Cmd Msg )
 init =
     { projects = NotAsked } ! [ Api.getProjects ]
+
+
+intoDict : List Project -> Dict Int Project
+intoDict collection =
+    collection
+        |> List.map (\p -> ( p.id, p ))
+        |> Dict.fromList
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -21,20 +28,17 @@ update msg model =
             model ! [ Api.getProjects ]
 
         ProjectsResponse projects ->
-            let
-                transformer ps =
-                    ps
-                        |> List.map (\p -> ( p.id, p ))
-                        |> Dict.fromList
-            in
-            { model | projects = RemoteData.map transformer projects } ! []
+            { model | projects = RemoteData.map intoDict projects } ! []
 
         GetProjectDetails projectId ->
             model ! [ Api.getProject projectId ]
 
         ProjectDetailResponse project ->
             let
-                dbg =
-                    Debug.log "project" project
+                addProject p ps =
+                    Dict.insert p.id p ps
+
+                newProjects =
+                    RemoteData.map2 addProject project model.projects
             in
-            model ! []
+            { projects = newProjects } ! []

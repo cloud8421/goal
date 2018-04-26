@@ -76,7 +76,10 @@ projectsList projects =
         panelLinkItem item =
             panelLink False
                 []
-                [ p [ onClick (GetProjectDetails item.id) ] [ text item.name ]
+                [ p [ onClick (GetProjectDetails item.id) ]
+                    [ text item.name
+                    , text <| toString <| item.goals
+                    ]
                 ]
     in
     case projects of
