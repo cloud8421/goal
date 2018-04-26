@@ -26,7 +26,8 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi :<|> actionApi)
     projectsApi =
       getAllProjects :<|> getProject :<|> putProject :<|> createProject :<|>
       deleteProject
-    goalsApi = createGoal :<|> getGoal :<|> deleteGoal :<|> putGoal
+    goalsApi =
+      createGoal :<|> getGoals :<|> getGoal :<|> deleteGoal :<|> putGoal
     actionApi = createAction :<|> deleteAction :<|> putAction
     homePage = return T.home
     getAllProjects = liftIO $ S.getAllProjects pool
@@ -46,6 +47,12 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi :<|> actionApi)
     createGoal projectId g =
       liftIO (S.createGoal pool projectId g) `catch`
       (\(SomeException _) -> Handler $ throwError err400)
+    getGoals projectId = do
+      maybeProject <- liftIO $ S.findProject pool projectId
+      goals <- liftIO $ S.findGoals pool projectId
+      case maybeProject of
+        Nothing -> Handler $ throwError err404
+        Just _project -> return goals
     getGoal goalId = do
       maybeGoal <- liftIO $ S.findGoal pool goalId
       actions <- liftIO $ S.findActions pool goalId

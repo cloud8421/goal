@@ -73,6 +73,12 @@ spec =
     context "GET /api/projects/<project-id> with invalid id" $ do
       let req = jsonGet "/api/projects/999"
       it "responds successfully" $ req `shouldRespondWith` 404
+    context "GET /api/projects/<project-id>/goals with valid id" $ do
+      let req = jsonGet "/api/projects/1/goals"
+      it "responds successfully" $ req `shouldRespondWith` 200
+    context "POST /api/projects/<project-id>/goals with invalid id" $ do
+      let req = jsonGet "/api/projects/999/goals"
+      it "responds successfully" $ req `shouldRespondWith` 404
     context "GET /api/goals/<goal-id> with valid id" $ do
       let req = jsonGet "/api/goals/1"
       it "responds successfully" $ req `shouldRespondWith` 200
