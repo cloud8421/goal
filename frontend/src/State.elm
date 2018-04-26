@@ -1,8 +1,8 @@
 module State exposing (..)
 
 import Api
-import Dict exposing (Dict)
 import RemoteData exposing (RemoteData(..))
+import Store
 import Types exposing (..)
 
 
@@ -16,17 +16,6 @@ init =
         ! [ Api.getProjects ]
 
 
-type alias Collectable a =
-    { a | id : Int }
-
-
-intoDict : List (Collectable a) -> Dict Int (Collectable a)
-intoDict collection =
-    collection
-        |> List.map (\i -> ( i.id, i ))
-        |> Dict.fromList
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -37,7 +26,7 @@ update msg model =
             model ! [ Api.getProjects ]
 
         ProjectsResponse projects ->
-            { model | projects = RemoteData.map intoDict projects } ! []
+            { model | projects = RemoteData.map Store.fromList projects } ! []
 
         GetProjectGoals projectId ->
             { model
@@ -47,4 +36,4 @@ update msg model =
                 ! [ Api.getProjectGoals projectId ]
 
         ProjectGoalsResponse goals ->
-            { model | goals = RemoteData.map intoDict goals } ! []
+            { model | goals = RemoteData.map Store.fromList goals } ! []

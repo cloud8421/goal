@@ -1,7 +1,7 @@
 module Types exposing (..)
 
-import Dict exposing (Dict)
 import RemoteData exposing (WebData)
+import Store exposing (Store)
 
 
 type alias ProjectId =
@@ -29,15 +29,15 @@ type alias Action =
 
 
 type alias Projects =
-    WebData (Dict Int Project)
+    WebData (Store Project)
 
 
 type alias Goals =
-    WebData (Dict Int Goal)
+    WebData (Store Goal)
 
 
 type alias Actions =
-    WebData (Dict Int Action)
+    WebData (Store Action)
 
 
 type alias Model =
