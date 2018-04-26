@@ -6,16 +6,18 @@ os:
 cache:
   directories:
   - "$HOME/.stack"
+  - sysconfcpus
 before_install:
 - mkdir -p ~/.local/bin
 - export PATH=$HOME/.local/bin:$PATH
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then brew install stack; fi
 install:
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ci/sysconfcpus-install.sh; fi
 - stack --no-terminal --install-ghc test --only-dependencies
 - npm install -g elm
 script:
-- cd frontend; travis_retry make; cd ..
+- cd frontend; if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make; else make; fi
 - stack --no-terminal test
 - stack install
 - cp ~/.local/bin/goal goal-$TRAVIS_OS_NAME
