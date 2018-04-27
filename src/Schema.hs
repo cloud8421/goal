@@ -12,6 +12,7 @@ module Schema where
 
 import Data.Aeson
 import Data.Text (Text)
+import Data.Time.Clock (UTCTime)
 import Database.Persist (Entity(..))
 import Database.Persist.TH
   ( mkDeleteCascade
@@ -28,14 +29,20 @@ share
   [persistLowerCase|
 Project json
     name Text
+    created UTCTime Maybe default=CURRENT_TIME
+    updated UTCTime Maybe default=CURRENT_TIME
     deriving Eq Show Generic
 Goal json
     projectId ProjectId
     description Text
+    created UTCTime Maybe default=CURRENT_TIME
+    updated UTCTime Maybe default=CURRENT_TIME
     deriving Eq Show Generic
 Action json
     goalId GoalId
     summary Text
+    created UTCTime Maybe default=CURRENT_TIME
+    updated UTCTime Maybe default=CURRENT_TIME
     deriving Eq Show Generic
 |]
 
@@ -68,7 +75,12 @@ instance FromJSON ActionWithoutGoalId
 instance ToJSON ProjectWithGoals where
   toJSON projectWithGoals =
     object
-      ["id" .= uid, "name" .= projectName pj, "goals" .= goals projectWithGoals]
+      [ "id" .= uid
+      , "name" .= projectName pj
+      , "goals" .= goals projectWithGoals
+      , "created" .= projectCreated pj
+      , "updated" .= projectUpdated pj
+      ]
     where
       (Entity uid pj) = project projectWithGoals
 
@@ -79,6 +91,8 @@ instance ToJSON GoalWithActions where
       , "projectId" .= goalProjectId g
       , "description" .= goalDescription g
       , "actions" .= actions goalWithActions
+      , "created" .= goalCreated g
+      , "updated" .= goalUpdated g
       ]
     where
       (Entity uid g) = goal goalWithActions

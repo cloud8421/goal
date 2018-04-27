@@ -37,7 +37,7 @@ createGoal ::
      ConnectionPool -> Key Project -> GoalWithoutProjectId -> IO (Key Goal)
 createGoal pool pjId goalWithoutPjId = runSqlPool (insert g) pool
   where
-    g = Goal pjId (description goalWithoutPjId)
+    g = Goal pjId (description goalWithoutPjId) Nothing Nothing
 
 deleteGoal :: ConnectionPool -> Key Goal -> IO ()
 deleteGoal pool goalId = runSqlPool (deleteCascade goalId) pool
@@ -56,7 +56,7 @@ createAction ::
      ConnectionPool -> Key Goal -> ActionWithoutGoalId -> IO (Key Action)
 createAction pool goalId actionWithoutGoalId = runSqlPool (insert a) pool
   where
-    a = Action goalId (summary actionWithoutGoalId)
+    a = Action goalId (summary actionWithoutGoalId) Nothing Nothing
 
 deleteAction :: ConnectionPool -> Key Action -> IO ()
 deleteAction pool actionId = runSqlPool (delete actionId) pool
