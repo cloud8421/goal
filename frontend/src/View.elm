@@ -49,20 +49,12 @@ activityColumns model =
 
 projectsColumn : Model -> Html Msg
 projectsColumn model =
-    column columnModifiers
-        []
-        [ title H3 [] [ text "Projects" ]
-        , projectsList model.projects
-        ]
+    column columnModifiers [] [ projectsList model.projects ]
 
 
 goalsColumn : Model -> Html Msg
 goalsColumn model =
-    column columnModifiers
-        []
-        [ title H3 [] [ text "Projects" ]
-        , goalsList model.goals
-        ]
+    column columnModifiers [] [ goalsList model.goals ]
 
 
 actionsColumn : Model -> Html msg
