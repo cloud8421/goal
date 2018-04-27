@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7df2ccad76ec745a206e7eab1cf7f413abc419472e91687b21b6c924df6dd36d
+-- hash: 3a7b47e268b933ce618966c72268af14e75dbb08f16c54805d5a5b8c6cece1b2
 
 name:           goal
 version:        0.1.0.0
@@ -26,6 +26,19 @@ flag dev
   default: False
 
 library
+  exposed-modules:
+      Api
+      Api.Action
+      Api.Goal
+      Api.Project
+      Config
+      Lib
+      Main
+      Schema
+      Store
+      Template
+  other-modules:
+      Paths_goal
   hs-source-dirs:
       src
   build-depends:
@@ -44,6 +57,7 @@ library
     , servant-blaze
     , servant-server
     , text
+    , time
     , wai
     , wai-extra
     , wai-logger
@@ -55,23 +69,21 @@ library
     cpp-options: -DDEVELOPMENT
   else
     ghc-options: -Wall -fwarn-tabs -O2
-  exposed-modules:
+  default-language: Haskell2010
+
+executable goal
+  main-is: Main.hs
+  other-modules:
       Api
       Api.Action
       Api.Goal
       Api.Project
       Config
       Lib
-      Main
       Schema
       Store
       Template
-  other-modules:
       Paths_goal
-  default-language: Haskell2010
-
-executable goal
-  main-is: Main.hs
   hs-source-dirs:
       src
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -92,28 +104,21 @@ executable goal
     , servant-blaze
     , servant-server
     , text
+    , time
     , wai
     , wai-extra
     , wai-logger
     , wai-middleware-static
     , wai-middleware-static-embedded
     , warp
-  other-modules:
-      Api
-      Api.Action
-      Api.Goal
-      Api.Project
-      Config
-      Lib
-      Schema
-      Store
-      Template
-      Paths_goal
   default-language: Haskell2010
 
 test-suite goal-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
+  other-modules:
+      LibSpec
+      Paths_goal
   hs-source-dirs:
       test
   ghc-options: -Wall
@@ -140,13 +145,11 @@ test-suite goal-test
     , servant-blaze
     , servant-server
     , text
+    , time
     , wai
     , wai-extra
     , wai-logger
     , wai-middleware-static
     , wai-middleware-static-embedded
     , warp
-  other-modules:
-      LibSpec
-      Paths_goal
   default-language: Haskell2010

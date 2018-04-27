@@ -27,6 +27,7 @@ dependencies:
 - servant-server
 - servant-blaze
 - text
+- time
 - wai
 - wai-extra
 - wai-logger
