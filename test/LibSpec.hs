@@ -9,6 +9,7 @@ import Control.Monad.Logger (runNoLoggingT)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy as LB
 import Data.Text (Text, unpack)
+import Data.Time
 import Database.Persist.Sqlite
   ( SqliteConnectionInfo
   , mkSqliteConnectionInfo
@@ -37,12 +38,19 @@ application :: IO Application
 application =
   runNoLoggingT $ withSqlitePoolInfo connInfo 1 $ \pool -> return $ app pool
 
+currentTime :: UTCTime
+currentTime = UTCTime (fromGregorian 2018 04 30) 0
+
 seedDb :: IO ()
 seedDb =
   runNoLoggingT $
   withSqlitePoolInfo connInfo 1 $ \pool -> do
     _ <- liftIO $ runMigrationsSilent pool
-    projectId <- liftIO $ createProject pool (Project "example")
+    projectId <-
+      liftIO $
+      createProject
+        pool
+        (Project "example" (Just currentTime) (Just currentTime))
     goalId <-
       liftIO $ createGoal pool projectId (GoalWithoutProjectId "example")
     _actionId <-
@@ -64,7 +72,8 @@ spec =
     -- GET
     context "GET /api/projects" $ do
       let req = jsonGet "/api/projects"
-      let respBody = [json|[{"id":1,"name":"example"}]|]
+      let respBody =
+            [json|[{"created":"2018-04-30T00:00:00Z","name":"example","id":1,"updated":"2018-04-30T00:00:00Z"}]|]
       it "responds successfully" $ req `shouldRespondWith` 200
       it "responds with []" $ req `shouldRespondWith` respBody
     context "GET /api/projects/<project-id> with valid id" $ do
