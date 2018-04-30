@@ -1,6 +1,7 @@
 module Store where
 
 import Data.Text (Text)
+import Data.Time.Clock (UTCTime)
 import Database.Persist
 import Database.Persist.Sqlite
 import Schema
@@ -17,8 +18,10 @@ getAllProjects = runSqlPool (selectList [] [])
 findProject :: ConnectionPool -> Key Project -> IO (Maybe (Entity Project))
 findProject pool pjId = runSqlPool (getEntity pjId) pool
 
-createProject :: ConnectionPool -> Project -> IO (Key Project)
-createProject pool pj = runSqlPool (insert pj) pool
+createProject :: ConnectionPool -> Project -> UTCTime -> IO (Key Project)
+createProject pool pj currentTime = runSqlPool (insert pjWithTime) pool
+  where
+    pjWithTime = Project (projectName pj) (Just currentTime) (Just currentTime)
 
 deleteProject :: ConnectionPool -> Key Project -> IO ()
 deleteProject pool pjId = runSqlPool (deleteCascade pjId) pool

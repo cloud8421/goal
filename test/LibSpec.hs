@@ -48,9 +48,7 @@ seedDb =
     _ <- liftIO $ runMigrationsSilent pool
     projectId <-
       liftIO $
-      createProject
-        pool
-        (Project "example" (Just currentTime) (Just currentTime))
+      createProject pool (Project "example" Nothing Nothing) currentTime
     goalId <-
       liftIO $ createGoal pool projectId (GoalWithoutProjectId "example")
     _actionId <-

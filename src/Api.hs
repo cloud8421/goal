@@ -12,6 +12,7 @@ import Api.Project
 import Control.Exception (SomeException(..))
 import Control.Monad.Catch (catch)
 import Control.Monad.IO.Class (liftIO)
+import Data.Time.Clock (getCurrentTime)
 import Database.Persist.Sqlite (ConnectionPool)
 import qualified Schema
 import Servant
@@ -37,7 +38,9 @@ server pool = homePage :<|> (projectsApi :<|> goalsApi :<|> actionApi)
       case maybeProject of
         Nothing -> Handler $ throwError err404
         Just project -> return $ Schema.ProjectWithGoals project goals
-    createProject project = liftIO $ S.createProject pool project
+    createProject project = do
+      currentTime <- liftIO getCurrentTime
+      liftIO $ S.createProject pool project currentTime
     deleteProject projectId = do
       liftIO $ S.deleteProject pool projectId
       return NoContent
